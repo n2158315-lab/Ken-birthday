@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naruto Calculus Shinobi Dance Chronicles</title>
+    <style>
+        :root {
+            --bg-color: #0f0c1b;
+            --konoha-blue: #0984e3;
+            --shinobi-green: #2e7d32;
+            --neon-purple: #a55eea;
+            --pastel-lavender: #e0b0ff;
+            --cute-pink: #ffb8b8;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            color: #fff;
+        }
+
+        .game-box {
+            background: rgba(20, 15, 38, 0.85);
+            border: 3px solid var(--neon-purple);
+            box-shadow: 0 0 25px var(--pastel-lavender);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 26px;
+            color: var(--pastel-lavender);
+            text-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        .subtitle {
+            color: var(--cute-pink);
+            font-size: 13px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .dance-zone {
+            font-size: 65px;
+            margin: 20px 0;
+            animation: pulse 1s infinite alternate;
+            user-select: none;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); filter: drop-shadow(0 0 5px var(--neon-purple)); }
+            to { transform: scale(1.1); filter: drop-shadow(0 0 15px var(--pastel-lavender)); }
+        }
+
+        .progress-container {
+            width: 100%;
+            background: #251f3d;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--konoha-blue);
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 25px;
+            background: linear-gradient(90deg, var(--konoha-blue), var(--neon-purple));
+            box-shadow: 0 0 10px var(--pastel-lavender);
+            transition: width 0.1s ease;
+        }
+
+        .btn-dance {
+            background-color: var(--neon-purple);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px #000;
+            transition: 0.1s;
+            width: 100%;
+        }
+
+        .btn-dance:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px #000;
+        }
+
+        #victory-screen {
+            display: none;
+        }
+
+        .birthday-text {
+            font-size: 34px;
+            color: #ffd700;
+            text-shadow: 0 0 15px #ff6b00;
+            animation: bounce 0.5s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-5px); }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            animation: fall 3s linear infinite;
+            top: -10px;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(105vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-box" id="game-box">
+        <!-- PLAYING SCREEN -->
+        <div id="play-screen">
+            <h1>💃 SHINOBI DANCE CHRONICLES 🕺</h1>
+            <div class="subtitle">Naruto Calculus Edition • Special for Ken</div>
+            
+            <div class="dance-zone" id="avatar">🦊</div>
+            
+            <div id="formula-box" style="font-style: italic; color: var(--pastel-lavender); margin-bottom: 10px; min-height: 20px; font-size: 14px;">
+                Integrate the Rhythm: ∫(Dance) dx = Birthday Energy!
+            </div>
+
+            <div style="font-weight: bold; margin-top: 15px;">Dance Sync Level: <span id="sync-text">0</span>%</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <button class="btn-dance" onclick="danceStep()">PERFORM SHINOBI STEP!</button>
+        </div>
+
+        <!-- VICTORY SCREEN -->
+        <div id="victory-screen">
+            <h1 class="birthday-text">🎉 HAPPY BIRTHDAY KEN! 🎉</h1>
+            <p style="color: var(--pastel-lavender); font-size: 18px; font-weight: bold; margin: 20px 0;">
+                Ultimate Dance Jutsu Unlocked! 🌌
+            </p>
+            <div style="font-size: 70px; animation: spin 2.5s linear infinite; display: inline-block;">🌀</div>
+            <p style="margin-top: 25px; font-style: italic; color: var(--cute-pink); font-size: 15px; line-height: 1.5;">
+                "Maligayang Kaarawan, Ken! Mas naging solid ang sayaw dahil sa calculus. Dattebayo!"
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let sync = 0;
+        const avatars = ["🦊", "⚡", "🐸", "🔥", "🌀", "🕶️", "🍃"];
+        const formulas = [
+            "∫(Dance) dx = Birthday Energy!",
+            "d/dx(Chakra) = Max Power Level!",
+            "Lim (Ken -> Birthday) = Infinite Party!",
+            "f(x) = Shinobi Rhythm² + Ken_Birthday",
+            "∑ (Good Vibes) from 1 to ∞"
+        ];
+
+        function danceStep() {
+            if (sync < 100) {
+                sync += 10;
+                if (sync > 100) sync = 100;
+                
+                document.getElementById('sync-text').innerText = sync;
+                document.getElementById('progress-bar').style.width = sync + '%';
+                
+                // Shuffle graphics and text for the choreography feel
+                let randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
+                let randomFormula = formulas[Math.floor(Math.random() * formulas.length)];
+                
+                document.getElementById('avatar').innerText = randomAvatar;
+                document.getElementById('formula-box').innerText = randomFormula;
+                
+                if (sync >= 100) {
+                    document.getElementById('play-screen').style.display = 'none';
+                    document.getElementById('victory-screen').style.display = 'block';
+                    document.getElementById('game-box').style.borderColor = 'var(--cute-pink)';
+                    createConfetti();
+                }
+            }
+        }
+
+        function createConfetti() {
+            const colors = ['#e0b0ff', '#ffb8b8', '#a55eea', '#0984e3', '#ffd700'];
+            for (let i = 0; i < 60; i++) {
+                let confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDelay = Math.random() * 2.5 + 's';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = Math.random() * 8 + 6 + 'px';
+                confetti.style.height = Math.random() * 8 + 6 + 'px';
+                document.body.appendChild(confetti);
+            }
+        }
+    </script>
+
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</body>
+</html>
